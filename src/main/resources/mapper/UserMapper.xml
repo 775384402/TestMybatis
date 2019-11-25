@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zwkj.ceng.mapper.UserMapper">
+    <select id="selectAllUsers" resultType="com.zwkj.ceng.entity.User"> <!-- resultType可以不用写全，与application.yml中的type-aliases-package属性组合使用 -->
+        select id,name from user;
+    </select>
+
+    <insert id="insertUser" parameterType="com.zwkj.ceng.entity.User" keyProperty="id">
+        insert  into user (id,name) values (#{id},#{name});
+    </insert>
+</mapper>

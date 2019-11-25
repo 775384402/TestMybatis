@@ -1,0 +1,23 @@
+#datasource
+spring:
+  datasource:
+    name: testDatasource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://122.51.239.204:3306/test17?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8
+    username: consumer
+    password: T775384402
+    # 使用druid连接池
+    type: com.alibaba.druid.pool.DruidDataSource
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
