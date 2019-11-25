@@ -18,7 +18,7 @@ public class MyBatisMapperScannerConfig {
         // 设置接口映射器基础包名
         mapperScannerConfigurer.setBasePackage("com.zwkj.ceng.mapper");
         Properties properties = new Properties();
-        //properties.setProperty("mappers", "org.chench.test.springboot.mapper");
+        //properties.setProperty("mappers", "com.zwkj.ceng.mapper");
         properties.setProperty("notEmpty", "false");
         properties.setProperty("IDENTITY", "MYSQL");
         mapperScannerConfigurer.setProperties(properties);

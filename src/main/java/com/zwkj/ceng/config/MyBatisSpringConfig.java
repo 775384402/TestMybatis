@@ -31,7 +31,7 @@ public class MyBatisSpringConfig implements TransactionManagementConfigurer {
         // 设置数据源
         sqlSessionFactoryBean.setDataSource(dataSource);
         // 设置映射POJO对象包名
-        // sqlSessionFactoryBean.setTypeAliasesPackage("org.chench.test.springboot.model");
+        // sqlSessionFactoryBean.setTypeAliasesPackage("com.zwkj.ceng.entity");
 
 
         // 在构建SqlSessionFactory时注册xml映射器
