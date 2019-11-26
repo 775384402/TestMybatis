@@ -1,19 +1,21 @@
 package com.zwkj.ceng.config;
 
+import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionFactoryBean;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
 import javax.sql.DataSource;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
@@ -27,22 +29,37 @@ public class MyBatisSpringConfig implements TransactionManagementConfigurer {
     // 3.注册xml映射器
     @Bean
     public SqlSessionFactory sqlSessionFactory() {
-        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-        // 设置数据源
-        sqlSessionFactoryBean.setDataSource(dataSource);
-        // 设置映射POJO对象包名
-        // sqlSessionFactoryBean.setTypeAliasesPackage("com.zwkj.ceng.entity");
 
-
-        // 在构建SqlSessionFactory时注册xml映射器
-        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+        String resource = "mybatis-config.xml";
+        Reader reader = null;
         try {
-            sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath:mapper/*.xml"));
-            return sqlSessionFactoryBean.getObject();
-        } catch (Exception e) {
+            reader = Resources.getResourceAsReader(resource);
+        } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException(e);
         }
+
+
+        Properties properties = new Properties();
+        properties.setProperty("username", "root");
+        properties.setProperty("password", "C775384402");
+
+        org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
+        //  在此配置下，全局启用或禁用在任何映射器中配置的所有缓存。
+        configuration.setCacheEnabled(false);
+        // 全局启用或禁用延迟加载。启用后，所有关系都会被延迟加载。可以通过使用fetchType属性将其替换为特定关系。
+        configuration.setLazyLoadingEnabled(false);
+        // 启用后，任何方法调用都将加载对象的所有惰性属性。否则，将按需加载每个属性 ≤3.4.1为真
+        configuration.setAggressiveLazyLoading(true);
+        // 允许或禁止从单个语句返回多个ResultSet（需要兼容的驱动程序）
+        configuration.setMultipleResultSetsEnabled(true);
+
+
+        SqlSessionFactory sqlSessionFactory =
+                new SqlSessionFactoryBuilder().build(reader,properties);
+
+        return sqlSessionFactory;
+
+
     }
 
     /**

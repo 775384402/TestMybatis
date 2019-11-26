@@ -21,11 +21,16 @@ public class UserController {
     @GetMapping("/users")
     public List<JSONObject> getAll() {
         List<User> list = userService.getAllUsers();
-         return list.stream().map(t -> JSON.parseObject(t.toString())).collect(Collectors.toList());
+        return list.stream().map(t -> JSON.parseObject(t.toString())).collect(Collectors.toList());
     }
 
     @PostMapping("/save")
-    public Integer saveUser(User user) {
-        return userService.saveUser(user);
+    public int saveUser(User user) {
+        User result = userService.getUserById(user.getId());
+        if (result == null) {
+            return userService.saveUser(user);
+        }
+        return -1;
     }
+
 }
