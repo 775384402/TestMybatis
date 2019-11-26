@@ -7,18 +7,19 @@ import com.zwkj.ceng.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
     UserService userService;
 
-    @GetMapping("/users")
+    @GetMapping("/all")
     public List<JSONObject> getAll() {
         List<User> list = userService.getAllUsers();
         return list.stream().map(t -> JSON.parseObject(t.toString())).collect(Collectors.toList());

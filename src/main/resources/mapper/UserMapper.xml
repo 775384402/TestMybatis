@@ -7,15 +7,15 @@
 	</select>
 
 
-	<select id="selectUserById" parameterType="int" resultType="com.zwkj.ceng.entity.User">
-		select * from user where #{id};
-	</select>
+<!--	<select id="selectUserById" parameterType="int" resultType="com.zwkj.ceng.entity.User">-->
+<!--		select * from user where #{id};-->
+<!--	</select>-->
 
-	<insert id="insertUser"
-		parameterType="com.zwkj.ceng.entity.User" useGeneratedKeys="true"
-		keyProperty="id">
-		insert into
-		user(id,name)
-		values(#{id},#{name});
-	</insert>
+<!--	<insert id="insertUser"-->
+<!--		parameterType="com.zwkj.ceng.entity.User" useGeneratedKeys="true"-->
+<!--		keyProperty="id">-->
+<!--		insert into-->
+<!--		user(id,name)-->
+<!--		values(#{id},#{name});-->
+<!--	</insert>-->
 </mapper>

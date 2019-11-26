@@ -1,14 +1,11 @@
 package com.zwkj.ceng.mapper;
 
 import com.zwkj.ceng.entity.User;
-import org.apache.ibatis.annotations.Select;
-import org.springframework.stereotype.Repository;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
 
-@Repository
-public interface UserMapper    {
+public interface UserMapper extends Mapper<User> {
     List<User> selectAllUsers();
 
     int insertUser(User user);

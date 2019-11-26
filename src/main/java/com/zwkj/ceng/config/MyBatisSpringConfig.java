@@ -1,49 +1,60 @@
 package com.zwkj.ceng.config;
 
-import org.apache.ibatis.io.Resources;
+import com.alibaba.druid.pool.DruidDataSource;
+import org.apache.ibatis.logging.log4j.Log4jImpl;
+import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.transaction.TransactionFactory;
+import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.annotation.TransactionManagementConfigurer;
+import tk.mybatis.spring.mapper.MapperScannerConfigurer;
 
 import javax.sql.DataSource;
-import java.io.IOException;
-import java.io.Reader;
 import java.util.Properties;
 
 @Configuration
-@EnableTransactionManagement
-public class MyBatisSpringConfig implements TransactionManagementConfigurer {
-    @Autowired
-    private DataSource dataSource;
+public class MyBatisSpringConfig {
 
-    // 在Spring中注册SqlSessionFactory，在这里可以设置一下参数：
-    // 1.设置分页参数
-    // 2.配置MyBatis运行时参数
-    // 3.注册xml映射器
-    @Bean
+    private final String url = "jdbc:mysql://122.51.239.204:3306/test17";
+    private final String driverName = "com.mysql.jdbc.Driver";
+    private final String username = "consumer";
+    private final String password = "T775384402";
+    private final int maxActive = 4;
+    private final int initialSize = 1;
+    private final int maxWait = 6000;
+    private final int minIdle = 1;
+    private final int timeBetweenEvictionRunsMillis = 60000;
+    private final int minEvictableIdleTimeMillis = 300000;
+    private final int maxOpenPreparedStatements = 3;
+    private final boolean poolPreparedStatements = true;
+
+    @Bean(value = "dataSource")
+    public DataSource dataSource() {
+        DruidDataSource dataSource = new DruidDataSource();
+        dataSource.setDriverClassName(driverName);
+        dataSource.setUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+        dataSource.setMaxActive(maxActive);
+        dataSource.setInitialSize(initialSize);
+        dataSource.setMaxWait(maxWait);
+        dataSource.setMinIdle(minIdle);
+        dataSource.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
+        dataSource.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
+        dataSource.setMaxOpenPreparedStatements(maxOpenPreparedStatements);
+        dataSource.setPoolPreparedStatements(poolPreparedStatements);
+        return dataSource;
+    }
+
+    @Bean(value = "sqlSessionFactory")
     public SqlSessionFactory sqlSessionFactory() {
 
-        String resource = "mybatis-config.xml";
-        Reader reader = null;
-        try {
-            reader = Resources.getResourceAsReader(resource);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        Properties properties = new Properties();
-        properties.setProperty("username", "root");
-        properties.setProperty("password", "C775384402");
-
-        org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
+        TransactionFactory transactionFactory = new JdbcTransactionFactory();
+        Environment environment = new Environment("development", transactionFactory, dataSource());
+        org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration(environment);
         //  在此配置下，全局启用或禁用在任何映射器中配置的所有缓存。
         configuration.setCacheEnabled(false);
         // 全局启用或禁用延迟加载。启用后，所有关系都会被延迟加载。可以通过使用fetchType属性将其替换为特定关系。
@@ -52,13 +63,11 @@ public class MyBatisSpringConfig implements TransactionManagementConfigurer {
         configuration.setAggressiveLazyLoading(true);
         // 允许或禁止从单个语句返回多个ResultSet（需要兼容的驱动程序）
         configuration.setMultipleResultSetsEnabled(true);
-
-
-        SqlSessionFactory sqlSessionFactory =
-                new SqlSessionFactoryBuilder().build(reader,properties);
-
+        // 指定 MyBatis 增加到日志名称的前缀。
+        configuration.setLogPrefix("-Cceng-");
+        configuration.setLogImpl(Log4jImpl.class);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
         return sqlSessionFactory;
-
 
     }
 
@@ -73,10 +82,19 @@ public class MyBatisSpringConfig implements TransactionManagementConfigurer {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
 
-    // Spring事务管理器
-    @Bean(value = "transactionManager")
-    @Override
-    public PlatformTransactionManager annotationDrivenTransactionManager() {
-        return new DataSourceTransactionManager(dataSource);
+    @Bean
+    public MapperScannerConfigurer mapperScannerConfigurer() {
+        MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
+        // 设置sqlSessionFactory名
+        mapperScannerConfigurer.setSqlSessionFactoryBeanName("sqlSessionFactory");
+        // 设置接口映射器基础包名
+        mapperScannerConfigurer.setBasePackage("com.zwkj.ceng.mapper");
+        Properties properties = new Properties();
+//        properties.setProperty("mappers", "com.zwkj.ceng.mapper");
+        properties.setProperty("notEmpty", "false");
+        properties.setProperty("IDENTITY", "MYSQL");
+        mapperScannerConfigurer.setProperties(properties);
+        return mapperScannerConfigurer;
     }
+
 }
