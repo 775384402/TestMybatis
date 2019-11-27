@@ -16,7 +16,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAllUsers() {
-        return userMapper.selectAll();
+//        return userMapper.selectAll();
+        return userMapper.selectAllUsers();
     }
 
     @Override
@@ -27,6 +28,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(int id) {
         return userMapper.selectUserById(id);
+    }
+
+    @Override
+    public List<User> getUserLeftTest(int id) {
+        return userMapper.selectTest(id);
     }
 
 

@@ -2,7 +2,6 @@ package com.zwkj.ceng.entity;
 
 import javax.persistence.Table;
 
-@Table(name = "user")
 public class User {
 
 	private int id;

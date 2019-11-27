@@ -11,4 +11,6 @@ public interface UserService {
      int saveUser(User user);
 
      User getUserById(int id);
+
+     List<User> getUserLeftTest(int id );
 }
