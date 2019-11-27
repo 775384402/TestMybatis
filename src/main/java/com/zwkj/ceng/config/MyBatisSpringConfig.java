@@ -18,7 +18,7 @@ import java.util.Properties;
 @Configuration
 public class MyBatisSpringConfig {
 
-    private final String url = "jdbc:mysql://122.51.239.204:3306/test17";
+    private final String url = "jdbc:mysql://122.51.239.204:3306/test17?useSSL=false";
     private final String driverName = "com.mysql.jdbc.Driver";
     private final String username = "consumer";
     private final String password = "T775384402";
@@ -51,7 +51,6 @@ public class MyBatisSpringConfig {
 
     @Bean(value = "sqlSessionFactory")
     public SqlSessionFactory sqlSessionFactory() {
-
         TransactionFactory transactionFactory = new JdbcTransactionFactory();
         Environment environment = new Environment("development", transactionFactory, dataSource());
         org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration(environment);
@@ -68,7 +67,6 @@ public class MyBatisSpringConfig {
         configuration.setLogImpl(Log4jImpl.class);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
         return sqlSessionFactory;
-
     }
 
     /**
@@ -90,7 +88,6 @@ public class MyBatisSpringConfig {
         // 设置接口映射器基础包名
         mapperScannerConfigurer.setBasePackage("com.zwkj.ceng.mapper");
         Properties properties = new Properties();
-//        properties.setProperty("mappers", "com.zwkj.ceng.mapper");
         properties.setProperty("notEmpty", "false");
         properties.setProperty("IDENTITY", "MYSQL");
         mapperScannerConfigurer.setProperties(properties);
