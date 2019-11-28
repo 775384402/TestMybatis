@@ -1,19 +1,16 @@
 package com.zwkj.ceng.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.zwkj.ceng.mapper.UserMapper;
-import org.apache.ibatis.logging.log4j.Log4jImpl;
-import org.apache.ibatis.mapping.Environment;
+import com.github.pagehelper.PageInterceptor;
+import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.apache.ibatis.transaction.TransactionFactory;
+import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -21,9 +18,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import tk.mybatis.spring.mapper.MapperScannerConfigurer;
 
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Properties;
+
+import static org.apache.ibatis.session.LocalCacheScope.STATEMENT;
 
 @Configuration
 @EnableTransactionManagement
@@ -60,34 +58,79 @@ public class MyBatisSpringConfig {
         return dataSource;
     }
 
-//    @Bean(value = "sqlSessionFactory")
-//    @Order(value = 2)
-//    public SqlSessionFactory sqlSessionFactory() {
-//        TransactionFactory transactionFactory = new ();
-//        Environment environment = new Environment("development", transactionFactory, dataSource());
-//        org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration(environment);
-//        //  在此配置下，全局启用或禁用在任何映射器中配置的所有缓存。
-////        configuration.setCacheEnabled(false);
-//        // 全局启用或禁用延迟加载。启用后，所有关系都会被延迟加载。可以通过使用fetchType属性将其替换为特定关系。
-//        configuration.setLazyLoadingEnabled(false);
-//        // 启用后，任何方法调用都将加载对象的所有惰性属性。否则，将按需加载每个属性 ≤3.4.1为真
-//        configuration.setAggressiveLazyLoading(true);
-//        // 允许或禁止从单个语句返回多个ResultSet（需要兼容的驱动程序）
-//        configuration.setMultipleResultSetsEnabled(true);
-//        // 指定 MyBatis 增加到日志名称的前缀。
-//        configuration.setLogPrefix("-Cceng-");
-//        configuration.setLogImpl(Log4jImpl.class);
-//        configuration.addMapper(UserMapper.class);
-//        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
-//        return sqlSessionFactory;
-//    }
     @Bean(value = "sqlSessionFactory")
-    public SqlSessionFactory sqlSessionFactory() throws Exception {
+    public SqlSessionFactory loadSqlSessionFactory() throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+        // 设置 TransactionFactory
+        sqlSessionFactoryBean.setTransactionFactory(new JdbcTransactionFactory());
+        // 设置 DataSource
         sqlSessionFactoryBean.setDataSource(dataSource());
+        // 扫描 mapper.xml文件路径
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath:mapper/*.xml"));
-        return sqlSessionFactoryBean.getObject();
+        // 设置分页插件
+        sqlSessionFactoryBean.setPlugins(new Interceptor[]{pageHelperInterceptor()});
+        // set SqlSessionFactoryBuilder
+        sqlSessionFactoryBean.setSqlSessionFactoryBuilder(new SqlSessionFactorySettingBuilder());
+        SqlSessionFactory sqlSessionFactory = sqlSessionFactoryBean.getObject();
+        return sqlSessionFactory;
+    }
+
+    public static PageInterceptor pageHelperInterceptor() {
+        //设置分页的拦截器
+        PageInterceptor pageInterceptor = new PageInterceptor();
+        //创建插件需要的参数集合
+        Properties properties = properties();
+        pageInterceptor.setProperties(properties);
+        return pageInterceptor;
+    }
+
+    public static Properties properties() {
+        Properties properties = new Properties();
+        properties.put("offsetAsPageNum", "true");
+        properties.put("rowBoundsWithCount", "true");
+        properties.put("pageSizeZero", "true");
+        properties.put("reasonable", "false");
+        properties.put("params", "pageNum=pageHelperStart;pageSize=pageHelperRows;");
+        properties.put("supportMethodsArguments", "false");
+        properties.put("returnPageInfo", "none");
+
+        return properties;
+    }
+
+
+    // 自定义 SqlSessionFactoryBuilder 修改 Configuration
+    class SqlSessionFactorySettingBuilder extends SqlSessionFactoryBuilder {
+        @Override
+        public SqlSessionFactory build(org.apache.ibatis.session.Configuration config) {
+
+            loadConfiguration(config);
+            return new DefaultSqlSessionFactory(config);
+        }
+
+        // 设置 configuration
+        public org.apache.ibatis.session.Configuration loadConfiguration(org.apache.ibatis.session.Configuration configuration) {
+            // MyBatis 利用本地缓存机制（Local Cache）防止循环引用（circular references）和加速重复嵌套查询。
+            // 默认值为 SESSION，这种情况下会缓存一个会话中执行的所有查询。
+            // 若设置值为 STATEMENT，本地会话仅用在语句执行上，对相同 SqlSession 的不同调用将不会共享数据。
+            configuration.setLocalCacheScope(STATEMENT);
+            // 指定当结果集中值为 null 的时候是否调用映射对象的 setter（map 对象时为 put）方法，
+            // 这在依赖于 Map.keySet() 或 null 值初始化的时候比较有用。
+            // 注意基本类型（int、boolean 等）是不能设置成 null 的。
+            configuration.setCallSettersOnNulls(true);
+            //  在此配置下，全局启用或禁用在任何映射器中配置的所有缓存。
+            configuration.setCacheEnabled(true);
+            // 全局启用或禁用延迟加载。启用后，所有关系都会被延迟加载。可以通过使用fetchType属性将其替换为特定关系。
+            configuration.setLazyLoadingEnabled(false);
+            // 启用后，任何方法调用都将加载对象的所有惰性属性。否则，将按需加载每个属性 ≤3.4.1为真
+            configuration.setAggressiveLazyLoading(true);
+            // 允许或禁止从单个语句返回多个ResultSet（需要兼容的驱动程序）
+            configuration.setMultipleResultSetsEnabled(true);
+            // 指定 MyBatis 增加到日志名称的前缀。
+            configuration.setLogPrefix("-Cceng-");
+            return configuration;
+        }
+
     }
 
     @Bean
@@ -103,7 +146,7 @@ public class MyBatisSpringConfig {
      */
     @Bean(value = "sqlSession")
     public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) throws Exception {
-        return new SqlSessionTemplate(sqlSessionFactory());
+        return new SqlSessionTemplate(loadSqlSessionFactory());
     }
 
     @Bean

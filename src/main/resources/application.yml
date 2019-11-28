@@ -1,11 +1,4 @@
 server:
     port: 8083
 logging:
-    level: INFO
-log4j:
-    logger:
-        com:
-            zwkj:
-                ceng:
-                    mapper:
-                        TestMapper: TRACE
+    level: DEBUG
