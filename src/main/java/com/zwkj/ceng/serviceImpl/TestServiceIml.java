@@ -3,6 +3,7 @@ package com.zwkj.ceng.serviceImpl;
 import com.zwkj.ceng.entity.Test;
 import com.zwkj.ceng.mapper.TestMapper;
 import com.zwkj.ceng.service.TestService;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -25,4 +26,24 @@ public class TestServiceIml implements TestService {
 
 
     }
+
+    @Override
+    public List<Test> selectByExampleAndRowBounds() {
+        Example example = new Example(Test.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("name", "Cc");
+        RowBounds rowBounds = new RowBounds(0, 20);
+        List<Test> list = testMapper.selectByExampleAndRowBounds(example, rowBounds);
+        int count = testMapper.selectCountByExample(example);
+        return list;
+    }
+
+    @Override
+    public List<Test> selectByRowBounds() {
+        List<Test> list = testMapper.selectByRowBounds(new Test(), new RowBounds(0, 20));
+        return list;
+    }
+
+
+
 }

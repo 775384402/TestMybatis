@@ -8,13 +8,13 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import tk.mybatis.spring.mapper.MapperScannerConfigurer;
 
 import javax.sql.DataSource;
@@ -40,6 +40,7 @@ public class MyBatisSpringConfig {
     private final int maxOpenPreparedStatements = 3;
     private final boolean poolPreparedStatements = true;
 
+    @DeleteMapping
     @Bean(value = "dataSource")
     public DataSource dataSource() {
         DruidDataSource dataSource = new DruidDataSource();
@@ -47,13 +48,22 @@ public class MyBatisSpringConfig {
         dataSource.setUrl(url);
         dataSource.setUsername(username);
         dataSource.setPassword(password);
-        dataSource.setMaxActive(maxActive);
+
+        // 初始化时建立物理连接的个数。初始化发生在显示调用init方法，或者第一次getConnection时
         dataSource.setInitialSize(initialSize);
+        // 配置获取连接等待超时的时间
         dataSource.setMaxWait(maxWait);
+        // 最大连接池数量
+        dataSource.setMaxActive(maxActive);
+        // 最小空闲连接
         dataSource.setMinIdle(minIdle);
+        //  每 timeBetweenEvictionRunsMillis 秒运行一次空闲连接回收器
         dataSource.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
+        // 池中的连接空闲30分钟后被回收,默认值就是30分钟。
         dataSource.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
+        // 要启用PSCache，必须配置大于0，当大于0时，poolPreparedStatements自动触发修改为true。在Druid中，不会存在Oracle下PSCache占用内存过多的问题，可以把这个数值配置大一些，比如说100
         dataSource.setMaxOpenPreparedStatements(maxOpenPreparedStatements);
+        // 是否缓存preparedStatement，也就是PSCache。PSCache对支持游标的数据库性能提升巨大，比如说oracle。在mysql下建议关闭。
         dataSource.setPoolPreparedStatements(poolPreparedStatements);
         return dataSource;
     }
@@ -138,16 +148,16 @@ public class MyBatisSpringConfig {
         return new DataSourceTransactionManager(dataSource());
     }
 
-    /**
-     * 注入sqlSession对象
-     *
-     * @param sqlSessionFactory
-     * @return
-     */
-    @Bean(value = "sqlSession")
-    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) throws Exception {
-        return new SqlSessionTemplate(loadSqlSessionFactory());
-    }
+//    /**
+//     * 注入sqlSession对象
+//     *
+//     * @param sqlSessionFactory
+//     * @return
+//     */
+//    @Bean(value = "sqlSession")
+//    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) throws Exception {
+//        return new SqlSessionTemplate(loadSqlSessionFactory());
+//    }
 
     @Bean
     public MapperScannerConfigurer mapperScannerConfigurer() {

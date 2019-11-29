@@ -1,9 +1,9 @@
 package com.zwkj.ceng.mapper;
 
 import com.zwkj.ceng.entity.Test;
-import tk.mybatis.mapper.common.ExampleMapper;
+import tk.mybatis.mapper.common.Mapper;
 
-public interface TestMapper extends ExampleMapper<Test> {
+public interface TestMapper extends Mapper<Test> {
 
 
 }
