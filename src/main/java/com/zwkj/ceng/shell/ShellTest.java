@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStreamReader;
 
 public class ShellTest {
@@ -12,14 +11,12 @@ public class ShellTest {
     private static Logger log = LoggerFactory.getLogger("shell_logger");
 
     public static void main(String[] args) throws Exception {
-        ShellTest shellTest =new ShellTest();
-        shellTest.service(shellTest.getPath());
-
+        ShellTest shellTest = new ShellTest();
+        String path = Thread.currentThread().getContextClassLoader().getResource("start.sh").getPath();
+        shellTest.service(path);
     }
 
-    public String getPath(){
-      return   this.getClass().getClassLoader().getResource("").getPath()+"testbash.sh";
-    }
+
     /**
      * Java执行shell脚本入口
      *
@@ -27,22 +24,10 @@ public class ShellTest {
      * @throws Exception
      */
     public void service(String shellName) throws Exception {
-        String shellDir = "";
-        String shellPath = "";
         try {
-            //获取脚本所在的目录
-//            String configFilePath = Thread.currentThread().getContextClassLoader().getResource("config.properties").getPath();
-//            File f = new File(configFilePath);
-//            shellDir = f.getParent();
-//            log.info("shell dir = " + shellDir);
-
-            //拼接完整的脚本目录
-//            shellPath = "/Users/zwkj/Desktop/" +  shellName;
-            shellPath = "/Users/zwkj/Desktop/" +  shellName;
-            log.info("shell path = " + shellPath);
-
+            log.info("shell path = " + shellName);
             //执行脚本
-            callScript(shellPath);
+            callScript(shellName);
 
         } catch (Exception e) {
             log.error("ShellExcutor异常" + e.getMessage(), e);
@@ -65,12 +50,11 @@ public class ShellTest {
             commandThread.start();
 
             while (true) {
-                if (commandThread.isFinish())
-                {
+                if (commandThread.isFinish()) {
                     break;
                 }
-                log.info("shell " + script + " 还未执行完毕,3s后重新探测");
-                Thread.sleep(3000);
+//                log.info("shell " + script + " 还未执行完毕,3s后重新探测");
+//                Thread.sleep(3000);
             }
 
             //检查脚本执行结果状态码
