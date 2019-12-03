@@ -20,7 +20,7 @@ else
 fi
 # 查看目前运行的pid
 
-# 多实例执行out_of_service，判断action log 情况
+# － 多实例执行out_of_service，判断action log 情况
 
 # kill pid
 
@@ -28,6 +28,6 @@ fi
 
 # tar -xvf 打包文件
 
-# sh sh_mock/mock-start-
+# － sh sh_mock/mock-start-
 
 # 提示查看启动日志

@@ -1,1 +1,1 @@
-mvn clean package -Dmaven.test.skip=true -DdescriptorFile=package-Test.xml
+mvn package assembly:single
