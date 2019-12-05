@@ -12,7 +12,7 @@ public class ShellTest {
 
     public static void main(String[] args) throws Exception {
         ShellTest shellTest = new ShellTest();
-        String path = Thread.currentThread().getContextClassLoader().getResource("start.sh").getPath();
+        String path = Thread.currentThread().getContextClassLoader().getResource("src/main/sbin/start.sh").getPath();
         shellTest.service(path);
     }
 

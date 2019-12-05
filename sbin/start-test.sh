@@ -3,9 +3,10 @@ source /etc/profile
 #source ~/.bash_profile
 
 cd `dirname $0`
+cd ..
 BIN_DIR=`pwd`
 cd ..
-DEPLOY_DIR=`pwd`
+DEPLOY_DIR=$BIN_DIR
 CONF_DIR=$DEPLOY_DIR/conf
 LOGS_DIR=$DEPLOY_DIR/logs
 
@@ -39,7 +40,7 @@ else
     JAVA_MEM_OPTS=" -server $4 -XX:SurvivorRatio=2 -XX:+UseParallelGC "
 fi
 echo "Conf_dir -- " $CONF_DIR 
-echo "LIB_JARS --" $LIB_JARS
+#echo "LIB_JARS --" $LIB_JARS
 echo $1
 echo -e "Starting the $SERVER_NAME ...\c"
 nohup java $1 $JAVA_MEM_OPTS $JAVA_DEBUG_OPTS -classpath $CONF_DIR:$LIB_JARS $3 javaconfig > $STDOUT_FILE 2>&1 &
