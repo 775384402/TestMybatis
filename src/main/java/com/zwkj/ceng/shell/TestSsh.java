@@ -1,10 +1,14 @@
 package com.zwkj.ceng.shell;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.Session;
 import ch.ethz.ssh2.StreamGobbler;
-
-import java.io.*;
 
 public class TestSsh {
     public static void main(String[] args) {
@@ -17,7 +21,7 @@ public class TestSsh {
                 throw new IOException("Authentication failed");
             }
             Session sess = conn.openSession();
-            sess.requestPTY("bash");
+            sess.requestPTY("bash");	
             sess.startShell();
             InputStream stdout = new StreamGobbler(sess.getStdout());
             InputStream stderr = new StreamGobbler(sess.getStderr());
