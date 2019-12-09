@@ -8,7 +8,15 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.springframework.util.StringUtils;
+import org.xml.sax.SAXException;
+
+import com.zwkj.ceng.shell.sax.SAXDemoHandel;
+import com.zwkj.ceng.shell.sax.Task;
 
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.SCPClient;
@@ -34,6 +42,8 @@ public class TaskTest {
 	static String FULLPATH = PATH + PROJECTNAME;
 	static String TARNAME = "TestMybatis-1.0-SNAPSHOT.tar.gz";
 
+	static List<Task> tasks = new ArrayList<Task>();
+
 	/**
 	 * @param args
 	 */
@@ -49,13 +59,13 @@ public class TaskTest {
 //		result = execute(conn, "ps -ef | grep java |awk '{print $2}' ");
 //		System.out.println("result  ==> \n" + result);
 
-		List<String> cmds = new ArrayList<String>();
-		cmds.add("if [ -f " + FULLPATH + " ];then\n" + "echo " + TARNAME + "存在 \n" + "else \n" + "echo " + TARNAME
-				+ "不存在\n" + "fi");
-
-		cmds.add("ps -ef | grep java |awk '{print $2}' ");
-
-		BaseTask task = new BaseTask(conn, cmds);
+//		List<String> cmds = new ArrayList<String>();
+//		cmds.add("if [ -f " + FULLPATH + " ];then\n" + "echo " + TARNAME + "存在 \n" + "else \n" + "echo " + TARNAME
+//				+ "不存在\n" + "fi");
+//
+//		cmds.add("ps -ef | grep java |awk '{print $2}' ");
+		tasks = init();
+		BaseTask task = new BaseTask(conn, tasks);
 		task.excutors(new Listener() {
 
 			@Override
@@ -73,6 +83,23 @@ public class TaskTest {
 			}
 		});
 
+	}
+
+	public static List<Task> init() {
+		// 1.获取SAXParserFactory实例
+		SAXParserFactory factory = SAXParserFactory.newInstance();
+		// 2.获取SAXparser实例
+		SAXParser saxParser;
+		try {
+			saxParser = factory.newSAXParser();
+			// 创建Handel对象
+			SAXDemoHandel handel = new SAXDemoHandel();
+			saxParser.parse("src/main/resources/Tasks.xml", handel);
+			return handel.getList();
+		} catch (IOException | ParserConfigurationException | SAXException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/*

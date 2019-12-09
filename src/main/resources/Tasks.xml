@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tasks>
+	<Task id="1">
+		<name>task1</name>
+		<next>task2</next>
+		<cmd>
+			if [ -f #{TARNAME} ];then
+			echo " #{TARNAME} 存在"
+			else
+			echo
+			"#{TARNAME} 不存在"
+			fi
+		</cmd>
+	</Task>
+
+	<Task id="2">
+		<name>task2</name>
+		<cmd>ps -ef | grep java |grep "$PROJECTNAME" |awk '{print $2}'
+		</cmd>
+	</Task>
+</Tasks>

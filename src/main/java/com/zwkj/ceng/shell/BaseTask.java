@@ -11,6 +11,8 @@ import java.util.List;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import com.zwkj.ceng.shell.sax.Task;
+
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.Session;
 import ch.ethz.ssh2.StreamGobbler;
@@ -24,11 +26,17 @@ public class BaseTask {
 	String cmd;
 	List<BaseTask> tasks = new ArrayList<BaseTask>();
 	BaseTask nextTask;
+	List<Task> tasks2 = new ArrayList<Task>();
 
-	public BaseTask(Connection con, List<String> cmds) {
+//	public BaseTask(Connection con, List<String> cmds) {
+//		this.con = con;
+//		this.cmds = cmds;
+//		tasks = creatTasks();
+//	}
+
+	public BaseTask(Connection con, List<Task> tasks2) {
 		this.con = con;
-		this.cmds = cmds;
-		tasks = creatTasks();
+		this.tasks2 = tasks2;
 	}
 
 	private BaseTask(Connection con, String cmd) {
