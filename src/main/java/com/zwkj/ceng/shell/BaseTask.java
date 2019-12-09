@@ -57,14 +57,12 @@ public class BaseTask {
 	}
 
 	public void excutors(Listener listener) {
-		if (!CollectionUtils.isEmpty(tasks)) {
-			for (int i = 0; i < tasks.size(); i++) {
-				String result = tasks.get(i).excutor(listener);
+		if (!CollectionUtils.isEmpty(tasks2)) {
 
-				if (result.contains("不存在")) {
-					listener.onError(result);
-					break;
-				}
+			while (tasks2.iterator().hasNext()) {
+
+				Task task = tasks2.iterator().next();
+				task.excutor();
 			}
 		}
 

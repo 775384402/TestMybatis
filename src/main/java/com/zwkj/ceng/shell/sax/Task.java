@@ -12,4 +12,7 @@ public class Task {
 	int id;
 	String cmd;
 	Map<String, Task> nextTask = new HashMap<String, Task>();
+
+	public void excutor() {
+	}
 }
