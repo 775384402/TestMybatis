@@ -2,6 +2,7 @@ package com.zwkj.ceng.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.github.pagehelper.PageInterceptor;
+import com.zwkj.ceng.cmap.MyMapper2;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -148,16 +149,6 @@ public class MyBatisSpringConfig {
         return new DataSourceTransactionManager(dataSource());
     }
 
-//    /**
-//     * 注入sqlSession对象
-//     *
-//     * @param sqlSessionFactory
-//     * @return
-//     */
-//    @Bean(value = "sqlSession")
-//    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) throws Exception {
-//        return new SqlSessionTemplate(loadSqlSessionFactory());
-//    }
 
     @Bean
     public MapperScannerConfigurer mapperScannerConfigurer() {

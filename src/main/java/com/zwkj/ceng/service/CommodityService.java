@@ -1,8 +1,10 @@
 package com.zwkj.ceng.service;
 
 import com.zwkj.ceng.entity.Commodity;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 
 public interface CommodityService {
 

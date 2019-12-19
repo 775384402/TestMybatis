@@ -39,24 +39,24 @@ public class shellUtil {
 
         conn = getConnection(HOSTNAME, PORT, USERNAME, PASSWORD);
         String result = "";
-        // 查询 tar文件 是否存在
-        result = execute(conn, "if [ -f " + FULLPATH + " ];then\n" +
-                "echo " + TARNAME + "存在 \n" +
-                "else \n" +
-                "echo " + TARNAME + "不存在\n" +
-                "fi");
-        System.out.println("result  ==> \n " + result);
-        // 查询 项目 是否运行 运行则删除
-        result = execute(conn, "ps -ef | grep java |grep " + PROJECTNAME + "|awk '{print $2}' | xargs kill -9 ");
-        System.out.println("result  ==> \n" + result);
-
-        // 删除原文件夹
-        result = execute(conn, "rm -rf " + FULLPATH);
-        System.out.println("result  ==> \n" + result);
-
-        // 重新解压 tar.gz
-        result = execute(conn, "tar -xvf  " + PATH + TARNAME + " -C " + PATH);
-        System.out.println("result  ==> \n" + result);
+//        // 查询 tar文件 是否存在
+//        result = execute(conn, "if [ -f " + FULLPATH + " ];then\n" +
+//                "echo " + TARNAME + "存在 \n" +
+//                "else \n" +
+//                "echo " + TARNAME + "不存在\n" +
+//                "fi");
+//        System.out.println("result  ==> \n " + result);
+//        // 查询 项目 是否运行 运行则删除
+//        result = execute(conn, "ps -ef | grep java |grep " + PROJECTNAME + "|awk '{print $2}' | xargs kill -9 ");
+//        System.out.println("result  ==> \n" + result);
+//
+//        // 删除原文件夹
+//        result = execute(conn, "rm -rf " + FULLPATH);
+//        System.out.println("result  ==> \n" + result);
+//
+//        // 重新解压 tar.gz
+//        result = execute(conn, "tar -xvf  " + PATH + TARNAME + " -C " + PATH);
+//        System.out.println("result  ==> \n" + result);
 
         // 启动应用
         result = execute(conn, "chmod -R 777  " + FULLPATH + "\n" +
