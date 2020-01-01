@@ -1,4 +1,8 @@
 server:
     port: 8080
-logging:
-    level: DEBUG
+
+
+spring:
+  redis:
+    host: 122.51.239.204
+    port: 6379
