@@ -1,15 +1,16 @@
 package com.zwkj.ceng.mapper;
 
-import java.math.BigDecimal;
-
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.cursor.Cursor;
 
 import com.zwkj.ceng.lock.account.dao.Account;
 
-import tk.mybatis.mapper.common.Mapper;
+@org.apache.ibatis.annotations.Mapper
+public interface AccountMapper {
 
-public interface AccountMapper extends Mapper<Account> {
+	@Select("select * from  account")
+	@Options(fetchSize = Integer.MIN_VALUE)
+	Cursor<Account> getAll();
 
-	@Select("Select balance from account where id = #{id}")
-	BigDecimal getBalanceById(String id);
 }
