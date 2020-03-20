@@ -2,9 +2,14 @@ package com.zwkj.ceng.controller;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.zwkj.ceng.mapper.ThirdpartyShippingMapper;
 import org.apache.ibatis.cursor.Cursor;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.batch.MyBatisCursorItemReader;
+import org.springframework.batch.item.ExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,40 +31,70 @@ import com.zwkj.ceng.service.CommodityService;
 @RequestMapping("/commodity")
 public class CommodityController {
 
-	@Autowired
-	AccountMapper accountMapper;
-	@Autowired
-	CommodityService commodityService;
+    @Autowired
+    AccountMapper accountMapper;
+    @Autowired
+    CommodityService commodityService;
+    @Autowired
+    SqlSessionFactory sqlSessionFactory;
 
-	@RequestMapping(method = RequestMethod.GET, value = "/get")
-	public void getAll() {
-		Cursor<Account> cursor = accountMapper.getAll();
-		Iterator<Account> iterator = cursor.iterator();
-		Account user = iterator.next();
-		cursor.forEach(c -> {
-			System.out.println(c.getId());
-		});
-	}
 
-	@GetMapping("/all")
-	public List<JSONObject> getAllCommodity() {
-		List<Commodity> allCommodity = commodityService.getAllCommodity();
-		return allCommodity.stream().map(t -> JSON.parseObject(t.toString())).collect(Collectors.toList());
-	}
+    @RequestMapping(method = RequestMethod.GET, value = "/get")
+    public void getAll() {
+        MyBatisCursorItemReader<Map> myBatisCursorItemReader = null;
+        try {
+            myBatisCursorItemReader = new MyBatisCursorItemReader();
+            myBatisCursorItemReader.setSqlSessionFactory(sqlSessionFactory);
+            myBatisCursorItemReader.setQueryId("com.zwkj.ceng.mapper.ThirdpartyShippingMapper.selectAll");
+            myBatisCursorItemReader.open(new ExecutionContext());
+            Map map;
+            while ((map = myBatisCursorItemReader.read()) != null) {
+                System.out.println(map);
+            }
+        } catch (Exception e) {
 
-	@PostMapping("/add")
-	public int saveCommodity(Commodity commodity) {
+        } finally {
+            if (myBatisCursorItemReader != null) {
+                myBatisCursorItemReader.close();
+            }
+        }
+    }
 
-		return commodityService.insertCommodity(commodity);
-	}
 
-	@PutMapping("/update")
-	public int updateCommodity(Commodity commodity) {
-		return commodityService.updateCommodity(commodity);
-	}
+    @RequestMapping(method = RequestMethod.GET, value = "/get2")
+    public void getAll2() throws Exception {
 
-	@DeleteMapping("/delete/{id}")
-	public int deleteCommodityById(@PathVariable("id") int id) {
-		return commodityService.deleteCommodityById(id);
-	}
+        MyBatisCursorItemReader<Map> myBatisCursorItemReader = new MyBatisCursorItemReader();
+        myBatisCursorItemReader.setSqlSessionFactory(sqlSessionFactory);
+        myBatisCursorItemReader.setQueryId("com.zwkj.ceng.mapper.AccountMapper.getAll");
+        myBatisCursorItemReader.open(new ExecutionContext());
+        Map account;
+        while ((account = myBatisCursorItemReader.read()) != null) {
+            System.out.println(account);
+        }
+        myBatisCursorItemReader.close();
+
+    }
+
+    @GetMapping("/all")
+    public List<JSONObject> getAllCommodity() {
+        List<Commodity> allCommodity = commodityService.getAllCommodity();
+        return allCommodity.stream().map(t -> JSON.parseObject(t.toString())).collect(Collectors.toList());
+    }
+
+    @PostMapping("/add")
+    public int saveCommodity(Commodity commodity) {
+
+        return commodityService.insertCommodity(commodity);
+    }
+
+    @PutMapping("/update")
+    public int updateCommodity(Commodity commodity) {
+        return commodityService.updateCommodity(commodity);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public int deleteCommodityById(@PathVariable("id") int id) {
+        return commodityService.deleteCommodityById(id);
+    }
 }

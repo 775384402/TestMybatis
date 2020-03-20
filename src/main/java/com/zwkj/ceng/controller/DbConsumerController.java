@@ -1,22 +1,39 @@
 package com.zwkj.ceng.controller;
 
+import com.zwkj.ceng.consumer.DbConsumer;
+import com.zwkj.ceng.mapper.ThirdpartyShippingMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.zwkj.ceng.consumer.DbConsumer;
 
 @RestController
 @RequestMapping("/consumer")
 public class DbConsumerController {
 
-	@GetMapping("/start")
-	public void startConsumer() {
-		List<String> list = new ArrayList<String>();
-		list.add("test-db-topic");
-		new Thread(new DbConsumer(list, "groupOne", null)).start();
-	}
+
+    List<String> list = new ArrayList<String>();
+
+    @Autowired
+    ThirdpartyShippingMapper thirdpartyShippingMapper;
+    DbConsumer dbConsumer = new DbConsumer(list, "groupOne", null, thirdpartyShippingMapper);
+    ;
+//    DbConsumer dbConsumer = new DbConsumer(list, "groupOne", Collections.singletonList(new TopicPartition("Test-Topic", 2)));
+
+    @GetMapping("/start")
+    public void startConsumer() {
+
+        list.add("Test-Topic");
+
+        new Thread(dbConsumer).start();
+    }
+
+    @RequestMapping(value = "/stop", method = RequestMethod.GET)
+    @ResponseBody
+    public void stop(@PathVariable String consumerName) {
+        dbConsumer.stop();
+    }
+
+
 }
