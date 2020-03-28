@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.zwkj.ceng.lock.RedisConfig;
 
 @SpringBootApplication
-@EnableKafkaConfig(serversBrokers = "122.51.239.204:9092", basePackages = "com.zwkj.ceng.consumer")
+@EnableKafkaConfig(serversBrokers = "122.51.239.204:9092", basePackages = "com.zwkj.ceng.kafka.consumer")
 public class App extends DefaultKafkaConfig {
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);

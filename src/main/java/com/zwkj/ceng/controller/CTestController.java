@@ -2,8 +2,8 @@ package com.zwkj.ceng.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.zwkj.ceng.entity.Commodity;
-import com.zwkj.ceng.mapper.CTestMapper;
+import com.zwkj.ceng.mybatis.entity.Commodity;
+import com.zwkj.ceng.mybatis.mapper.CTestMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,7 +1,7 @@
 package com.zwkj.ceng.serviceImpl;
 
-import com.zwkj.ceng.entity.Commodity;
-import com.zwkj.ceng.mapper.CommodityMapper;
+import com.zwkj.ceng.mybatis.entity.Commodity;
+import com.zwkj.ceng.mybatis.mapper.CommodityMapper;
 import com.zwkj.ceng.service.CommodityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

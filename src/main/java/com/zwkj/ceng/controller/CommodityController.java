@@ -1,12 +1,9 @@
 package com.zwkj.ceng.controller;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.zwkj.ceng.mapper.ThirdpartyShippingMapper;
-import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.batch.MyBatisCursorItemReader;
 import org.springframework.batch.item.ExecutionContext;
@@ -22,9 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.zwkj.ceng.entity.Commodity;
-import com.zwkj.ceng.lock.account.dao.Account;
-import com.zwkj.ceng.mapper.AccountMapper;
+import com.zwkj.ceng.mybatis.entity.Commodity;
+import com.zwkj.ceng.mybatis.mapper.AccountMapper;
 import com.zwkj.ceng.service.CommodityService;
 
 @RestController
@@ -45,7 +41,7 @@ public class CommodityController {
         try {
             myBatisCursorItemReader = new MyBatisCursorItemReader();
             myBatisCursorItemReader.setSqlSessionFactory(sqlSessionFactory);
-            myBatisCursorItemReader.setQueryId("com.zwkj.ceng.mapper.ThirdpartyShippingMapper.selectAll");
+            myBatisCursorItemReader.setQueryId("com.zwkj.ceng.mybatis.mapper.ThirdpartyShippingMapper.selectAll");
             myBatisCursorItemReader.open(new ExecutionContext());
             Map map;
             while ((map = myBatisCursorItemReader.read()) != null) {
@@ -66,7 +62,7 @@ public class CommodityController {
 
         MyBatisCursorItemReader<Map> myBatisCursorItemReader = new MyBatisCursorItemReader();
         myBatisCursorItemReader.setSqlSessionFactory(sqlSessionFactory);
-        myBatisCursorItemReader.setQueryId("com.zwkj.ceng.mapper.AccountMapper.getAll");
+        myBatisCursorItemReader.setQueryId("com.zwkj.ceng.mybatis.mapper.AccountMapper.getAll");
         myBatisCursorItemReader.open(new ExecutionContext());
         Map account;
         while ((account = myBatisCursorItemReader.read()) != null) {

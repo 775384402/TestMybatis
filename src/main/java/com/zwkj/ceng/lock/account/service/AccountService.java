@@ -1,7 +1,6 @@
 package com.zwkj.ceng.lock.account.service;
 
 import java.math.BigDecimal;
-import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.Lock;
@@ -11,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zwkj.ceng.lock.RedisLock;
-import com.zwkj.ceng.lock.account.dao.Account;
-import com.zwkj.ceng.lock.account.dao.AccountRequest;
-import com.zwkj.ceng.lock.account.error.AccountErrorCode;
-import com.zwkj.ceng.mapper.AccountMapper;
+import com.zwkj.ceng.mybatis.mapper.AccountMapper;
 
 @Service
 public class AccountService {

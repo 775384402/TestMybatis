@@ -1,7 +1,7 @@
 package com.zwkj.ceng.controller;
 
-import com.zwkj.ceng.entity.Test;
-import com.zwkj.ceng.mapper.TestMapper;
+import com.zwkj.ceng.mybatis.entity.Test;
+import com.zwkj.ceng.mybatis.mapper.TestMapper;
 import com.zwkj.ceng.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

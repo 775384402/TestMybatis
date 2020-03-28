@@ -1,7 +1,7 @@
 package com.zwkj.ceng.serviceImpl;
 
-import com.zwkj.ceng.entity.Test;
-import com.zwkj.ceng.mapper.TestMapper;
+import com.zwkj.ceng.mybatis.entity.Test;
+import com.zwkj.ceng.mybatis.mapper.TestMapper;
 import com.zwkj.ceng.service.TestService;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;

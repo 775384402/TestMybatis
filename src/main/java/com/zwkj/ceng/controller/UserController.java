@@ -2,7 +2,7 @@ package com.zwkj.ceng.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.zwkj.ceng.entity.User;
+import com.zwkj.ceng.mybatis.entity.User;
 import com.zwkj.ceng.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

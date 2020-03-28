@@ -1,6 +1,6 @@
 package com.zwkj.ceng.service;
 
-import com.zwkj.ceng.entity.User;
+import com.zwkj.ceng.mybatis.entity.User;
 
 import java.util.List;
 

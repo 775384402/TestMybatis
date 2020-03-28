@@ -2,13 +2,7 @@ package com.zwkj.ceng.service;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.cursor.Cursor;
-import org.apache.ibatis.mapping.ResultSetType;
-
-import com.zwkj.ceng.entity.Account;
-import com.zwkj.ceng.entity.Commodity;
+import com.zwkj.ceng.mybatis.entity.Commodity;
 
 public interface CommodityService {
 
