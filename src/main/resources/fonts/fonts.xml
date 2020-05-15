@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fontFamilies>
+    <fontFamily name="Songti TC">
+        <normal>/Users/zwhd/Desktop/STSONG.ttf</normal>
+        <bold>/Users/zwhd/Desktop/STSONG.ttf</bold>
+        <italic>/Users/zwhd/Desktop/STSONG.ttf</italic>
+        <boldItalic>/Users/zwhd/Desktop/STSONG.ttf</boldItalic>
+        <pdfEncoding>Identity-H</pdfEncoding>
+        <pdfEmbedded>true</pdfEmbedded>
+        <exportFonts>
+            <export key="net.sf.jasperreports.html">'Songti TC', Arial, Helvetica, sans-serif</export>
+            <export key="net.sf.jasperreports.xhtml">'Songti TC', Arial, Helvetica, sans-serif</export>
+        </exportFonts>
+        <!--
+        <locales>
+            <locale>en_US</locale>
+            <locale>de_DE</locale>
+        </locales>
+        -->
+    </fontFamily>
+
+    <fontFamily name="STHeiti">
+        <normal>/Users/zwhd/TestMybatis/src/main/resources/fonts/STHeiti Light.ttc</normal>
+        <bold>/Users/zwhd/TestMybatis/src/main/resources/fonts/STHeiti Light.ttc</bold>
+        <italic>/Users/zwhd/TestMybatis/src/main/resources/fonts/STHeiti Light.ttc</italic>
+        <boldItalic>/Users/zwhd/TestMybatis/src/main/resources/fonts/STHeiti Light.ttc</boldItalic>
+        <pdfEncoding>Identity-H</pdfEncoding>
+        <pdfEmbedded>true</pdfEmbedded>
+        <exportFonts>
+            <export key="net.sf.jasperreports.html">'STHeiti', Arial, Helvetica, sans-serif</export>
+            <export key="net.sf.jasperreports.xhtml">'STHeiti', Arial, Helvetica, sans-serif</export>
+        </exportFonts>
+        <!--
+        <locales>
+            <locale>en_US</locale>
+            <locale>de_DE</locale>
+        </locales>
+        -->
+    </fontFamily>
+
+
+</fontFamilies>
